@@ -4,18 +4,28 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: "#1dbf73",
-        active: "#1e1692",
-        darkColor: "#404145",
-        navbg: "#013914",
-        darkblue: "#0d084d",
-        clientBg: "#fafafa",
-      },
-      backgroundPosition: {
-        "top-4": "right top -4rem",
+        primary: "#4F46E5",
+        active: "#4338CA",
+        darkColor: "#0F172A",
+        navbg: "#EEF2FF",
+        darkblue: "#312E81",
+        clientBg: "#F1F5F9",
+        base: "#F8F9FB",
+        surface: "#FFFFFF",
+        elevated: "#EEF2FF",
+        textPrimary: "#0F172A",
+        textMuted: "#64748B",
+        borderSubtle: "#E2E8F0",
+        accent: "#4F46E5",
+        accentHover: "#4338CA",
       },
       boxShadow: {
-        box: "0 0.14px 2.29266px rgb(0 0 0 / 3%), 0 0.37px 4.42626px rgb(0 0 0 / 5%), 0 3px 7px rgb(0 0 0 / 9%)",
+        box: "0 12px 30px rgba(15, 23, 42, 0.08)",
+        soft: "0 18px 45px rgba(79, 70, 229, 0.10)",
+      },
+      fontFamily: {
+        display: ["'Plus Jakarta Sans'", "sans-serif"],
+        body: ["Inter", "sans-serif"],
       },
       screens: {
         laptop: "1136px",

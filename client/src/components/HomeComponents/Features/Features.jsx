@@ -1,97 +1,48 @@
-import { useState, useRef, useEffect, useMemo } from "react";
-import { BsCheckCircle, BsPlayFill } from "react-icons/bs";
-import userImg from "../../../assets/images/users.png";
-import { featureData } from "../../../data/data";
+import React from "react";
+import { HiOutlineClipboardDocumentCheck, HiOutlineUserGroup, HiOutlineRocketLaunch } from "react-icons/hi2";
 
 const Features = () => {
-  const [showVideo, setShowVideo] = useState(false);
-  const videoRef = useRef(null);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (videoRef.current && !videoRef.current.contains(event.target)) {
-        setShowVideo(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
-  const body = document.querySelector("body");
-
-  const overflowHidden = () => {
-    if (showVideo) {
-      return (body.style.overflow = "hidden");
-    } else {
-      return {
-        body: {
-          one: (body.style.overflowY = "auto"),
-          two: (body.style.overflowX = "hidden"),
-        },
-      };
-    }
-  };
-  useMemo(() => overflowHidden(), [showVideo]);
-
-  const handleButtonClick = () => {
-    setShowVideo(true);
-  };
+  const steps = [
+    {
+      icon: HiOutlineClipboardDocumentCheck,
+      title: "1. Share your scope",
+      detail: "Post your project brief, budget, timeline, and required skills in less than 5 minutes.",
+    },
+    {
+      icon: HiOutlineUserGroup,
+      title: "2. Match with experts",
+      detail: "Receive curated freelancer matches with proven track records and transparent pricing.",
+    },
+    {
+      icon: HiOutlineRocketLaunch,
+      title: "3. Launch and scale",
+      detail: "Manage delivery from one dashboard and scale teams as your roadmap grows.",
+    },
+  ];
 
   return (
-    <section className="bg-[#f1fdf7] py-14">
+    <section className="py-20 bg-white border-y border-borderSubtle">
       <div className="contain">
-        <div className="flex lg:items-center flex-col items-start justify-start lg:flex-row lg:justify-between w-full gap-8 lg:gap-5">
-          <div className="flex-1 flex items-start justify-start flex-col gap-5">
-            <h2 className="text-xl sm:text-2xl lg:text-4xl font-bold text-darkColor">
-              A whole world of freelance <br /> talent at your fingertips
-            </h2>
-            <div className="w-full flex items-start justify-start flex-col gap-5">
-              {featureData.map((item, i) => (
-                <div
-                  className="flex items-start justify-start w-full flex-col gap-3"
-                  key={i}
-                >
-                  <div className="flex items-center justify-start gap-3">
-                    <span className="text-darkColor">
-                      <BsCheckCircle className="sm:w-6 sm:h-6 w-4 h-4" />
-                    </span>
-                    <h2 className="text-base sm:text-lg font-semibold text-darkColor">
-                      {item.title}
-                    </h2>
-                  </div>
-                  <p className="w-full lg:max-w-[450px] text-sm sm:text-base font-medium text-gray-500">
-                    {item.detail}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="flex-1">
-            <div className="w-full relative" onClick={handleButtonClick}>
-              <img src={userImg} alt="features_image" className="w-full" />
-              <span className="absolute top-0 w-full h-full flex items-center justify-center text-white">
-                <span className="bg-black/50 rounded-full flex items-center w-[60px] h-[60px] justify-center cursor-pointer">
-                  <BsPlayFill size={59} />
-                </span>
-              </span>
-            </div>
-            {showVideo && (
-              <div className="fixed top-0 right-0 bg-[#00000085]  w-full h-full z-40 place-items-center flex justify-center items-center">
-                <div
-                  ref={videoRef}
-                  className="lg:w-[986px] lg:h-[551px] h-[250px] rounded-2xl w-[90%] flex items-center justify-center"
-                >
-                  <video
-                    className="rounded-md h-full w-full"
-                    src="https://fiverr-res.cloudinary.com/video/upload/t_fiverr_hd/vmvv3czyk2ifedefkau7"
-                    controls
-                  ></video>
-                </div>
+        <div className="text-center mb-12">
+          <p className="text-xs uppercase tracking-[0.2em] text-indigo-600 font-semibold">How it works</p>
+          <h2 className="headline-display text-3xl md:text-4xl font-bold text-slate-900 mt-2">
+            A 3-step system for faster execution
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
+          {steps.map((item, index) => (
+            <div key={item.title} className="surface-card p-6 relative">
+              <div className="w-14 h-14 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center mb-5 text-indigo-600">
+                <item.icon size={28} />
               </div>
-            )}
-          </div>
+              <h3 className="headline-display text-xl font-bold text-slate-900">{item.title}</h3>
+              <p className="text-textMuted mt-3 text-sm leading-6">{item.detail}</p>
+              {index !== steps.length - 1 && (
+                <span className="hidden md:block absolute top-12 -right-6 w-12 border-t-2 border-dashed border-indigo-200" />
+              )}
+            </div>
+          ))}
         </div>
       </div>
     </section>

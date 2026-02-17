@@ -3,49 +3,50 @@ import { MdChevronLeft, MdChevronRight } from "react-icons/md";
 
 const Slides = ({ children, rowId, text, distance }) => {
   const slideLeft = () => {
-    let slider = document.getElementById("slider" + rowId);
-    let maxScrollLeft = slider.scrollWidth - slider.clientWidth; // maximum scroll position
+    const slider = document.getElementById("slider" + rowId);
+    if (!slider) return;
+    const maxScrollLeft = slider.scrollWidth - slider.clientWidth;
     if (slider.scrollLeft > 0) {
-      // check if not at the beginning
       slider.scrollLeft = slider.scrollLeft - distance;
     } else {
-      // if at beginning, wrap to end
       slider.scrollLeft = maxScrollLeft;
     }
   };
+
   const slideRight = () => {
-    let slider = document.getElementById("slider" + rowId);
-    let maxScrollLeft = slider.scrollWidth - slider.clientWidth; // maximum scroll position
+    const slider = document.getElementById("slider" + rowId);
+    if (!slider) return;
+    const maxScrollLeft = slider.scrollWidth - slider.clientWidth;
     if (slider.scrollLeft < maxScrollLeft) {
-      // check if not at the end
       slider.scrollLeft = slider.scrollLeft + distance;
     } else {
-      // if at end, wrap to beginning
       slider.scrollLeft = 0;
     }
   };
+
   return (
-    <section className="py-10">
+    <section className="py-12">
       <div className="contain">
-        <div className="flex flex-col items-start justify-start gap-4 w-full">
-          <h2 className="text-xl md:text-3xl font-bold text-darkColor">{text}</h2>
+        <div className="flex flex-col items-start gap-4 w-full">
+          {text && <h2 className="text-2xl md:text-3xl font-bold text-textPrimary headline-display">{text}</h2>}
           <div className="relative flex items-center group w-full">
-            <MdChevronLeft
+            <button
               onClick={slideLeft}
-              size={40}
-              className="bg-white rounded-full absolute opacity-50 hover:opacity-100 cursor-pointer z-10 hidden group-hover:block"
-            />
-            <div
-              id={"slider" + rowId}
-              className="w-full h-full overflow-x-scroll whitespace-nowrap scroll-smooth scrollbar-hide relative"
+              className="bg-elevated text-textPrimary rounded-full absolute opacity-0 group-hover:opacity-100 cursor-pointer z-10 hidden md:flex tap-target items-center justify-center border border-borderSubtle"
+              aria-label="Slide left"
             >
+              <MdChevronLeft size={26} />
+            </button>
+            <div id={"slider" + rowId} className="w-full h-full overflow-x-scroll whitespace-nowrap scroll-smooth scrollbar-hide relative">
               {children}
             </div>
-            <MdChevronRight
+            <button
               onClick={slideRight}
-              size={40}
-              className="bg-white right-0 rounded-full absolute opacity-50 hover:opacity-100 cursor-pointer z-10 hidden  group-hover:block"
-            />
+              className="bg-elevated right-0 text-textPrimary rounded-full absolute opacity-0 group-hover:opacity-100 cursor-pointer z-10 hidden md:flex tap-target items-center justify-center border border-borderSubtle"
+              aria-label="Slide right"
+            >
+              <MdChevronRight size={26} />
+            </button>
           </div>
         </div>
       </div>

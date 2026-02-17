@@ -1,24 +1,20 @@
-import React, { useState, useEffect, useRef } from "react";
-import { TfiWorld } from "react-icons/tfi";
-import { BsCurrencyDollar } from "react-icons/bs";
+import React, { useEffect, useRef, useState } from "react";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+import { FaBars } from "react-icons/fa";
 import Login from "../../pages/login/Login";
 import useAuthStore from "../../stores";
 import Avatar from "../../assets/icons/avatar.jpg";
 import { toast } from "react-toastify";
 import { Axios } from "../../config";
 import requests from "../../libs/request";
-import { FiChevronRight } from "react-icons/fi";
-import { FaBars } from "react-icons/fa";
 import MobileSidebar from "./MobileSidebar/MobileSidebar";
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const { pathname } = useLocation();
   const { authUser, removeAuthUser } = useAuthStore();
-  const [active, setActive] = useState(false);
   const [openDrop, setOpenDrop] = useState(false);
   const [showLink, setShowLink] = useState(false);
-  const { pathname } = useLocation();
   const [loginModal, setLoginModal] = useState(false);
   const modalRef = useRef(null);
 
@@ -29,20 +25,13 @@ const Navbar = () => {
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   useEffect(() => {
-    const backgroundChange = () => {
-      window.scrollY > 0 ? setActive(true) : setActive(false);
-    };
-    window.addEventListener("scroll", backgroundChange);
-    return () => {
-      window.removeEventListener("scroll", backgroundChange);
-    };
-  }, []);
+    setOpenDrop(false);
+    setShowLink(false);
+  }, [pathname]);
 
   const handleLogout = async () => {
     try {
@@ -59,187 +48,108 @@ const Navbar = () => {
     }
   };
 
-  const links = [
-    "Graphics & Design",
-    "Digital Marketing",
-    "Writing & Translation",
-    "Video & Animation",
-    "Music & Audio",
-    "Programming & Tech",
-    "Business",
-    "Lifestyle",
-    "AI Services",
-  ];
-
-  const slideRight = () => {
-    let slider = document.getElementById("navSlider");
-    let maxScrollLeft = slider.scrollWidth - slider.clientWidth; // maximum scroll position
-    if (slider.scrollLeft < maxScrollLeft) {
-      // check if not at the end
-      slider.scrollLeft = slider.scrollLeft + 400;
-    } else {
-      // if at end, wrap to beginning
-      slider.scrollLeft = 0;
-    }
-  };
-
-
   return (
-    <header
-      className={`flex items-center justify-center w-full flex-col text-white fixed top-0 transition-all ease-in-out z-20 ${
-        active || pathname !== "/" ? "bg-white !text-darkColor" : ""
-      }`}
-    >
+    <header className="fixed top-0 z-30 w-full border-b border-borderSubtle bg-surface/95 backdrop-blur">
       <div className="contain">
-        <div className="w-full flex items-center justify-between py-4 relative">
-          <MobileSidebar
-            show={showLink}
-            setShow={setShowLink}
-            setLoginModal={setLoginModal}
-          />
-          <div className="flex items-center gap-2 h-full justify-between w-[50%] sm:w-fit">
-            <span onClick={() => setShowLink(true)} className="lg:hidden mt-1">
-              <FaBars size={25} />
-            </span>
-            <Link
-              to="/"
-              className="text-4xl select-none font-black tracking-tighter"
+        <div className="h-[76px] flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setShowLink(true)}
+              className="lg:hidden tap-target rounded-lg border border-borderSubtle text-textPrimary"
+              aria-label="Open menu"
             >
-              <span>fiverr</span>
-              <span className="text-primary">.</span>
+              <FaBars size={18} className="mx-auto" />
+            </button>
+            <Link to="/" className="text-3xl font-extrabold headline-display tracking-tight text-textPrimary">
+              talentrix
             </Link>
           </div>
-          <nav className="flex items-center justify-end gap-7 font-medium text-base">
-            <Link to="/" className="cursor-pointer hidden lg:flex">
-              Fiverr Business
-            </Link>
-            <div className="cursor-pointer hidden lg:flex">Explore</div>
-            <div className="items-center gap-2 cursor-pointer hidden lg:flex">
-              <span>
-                <TfiWorld />
-              </span>
-              English
-            </div>
-            <span className="hidden lg:flex items-center gap-2 cursor-pointer">
-              <span>
-                <BsCurrencyDollar />
-              </span>
-              USD
-            </span>
-            {!authUser?.isSeller && (
-              <p className="cursor-pointer hidden lg:flex">Become a Seller</p>
-            )}
+
+          <nav className="hidden lg:flex items-center gap-10 text-sm font-semibold text-textMuted">
+            <NavLink to="/" className="hover:text-textPrimary transition-colors">
+              Product
+            </NavLink>
+            <NavLink to="/gigs" className="hover:text-textPrimary transition-colors">
+              Marketplace
+            </NavLink>
+            <NavLink to="/messages" className="hover:text-textPrimary transition-colors">
+              Resources
+            </NavLink>
+          </nav>
+
+          <div className="flex items-center gap-3">
             {authUser ? (
-              <>
-                {authUser && (
-                  <div
-                    className="relative flex flex-col sm:flex-row items-center sm:gap-4 cursor-pointer"
-                    onClick={() => setOpenDrop((prev) => !prev)}
+              <div className="relative" ref={modalRef}>
+                <button
+                  className="flex items-center gap-2 rounded-full border border-borderSubtle px-2 py-1.5"
+                  onClick={() => setOpenDrop((prev) => !prev)}
+                >
+                  <img
+                    src={authUser.img || Avatar}
+                    alt="user"
+                    className="w-8 h-8 rounded-full object-cover"
+                  />
+                  <span className="hidden sm:block text-sm max-w-[130px] truncate">{authUser.username}</span>
+                </button>
+                <div
+                  className={`absolute top-12 right-0 w-[210px] surface-card p-2 z-40 ${
+                    openDrop ? "block" : "hidden"
+                  }`}
+                >
+                  {authUser?.isSeller && (
+                    <>
+                      <NavLink to="/myGigs" className="tap-target px-3 rounded-md hover:bg-elevated flex items-center text-sm">
+                        My Gigs
+                      </NavLink>
+                      <NavLink to="/add" className="tap-target px-3 rounded-md hover:bg-elevated flex items-center text-sm">
+                        Add Gig
+                      </NavLink>
+                    </>
+                  )}
+                  <NavLink to="/orders" className="tap-target px-3 rounded-md hover:bg-elevated flex items-center text-sm">
+                    Orders
+                  </NavLink>
+                  <NavLink to="/messages" className="tap-target px-3 rounded-md hover:bg-elevated flex items-center text-sm">
+                    Messages
+                  </NavLink>
+                  <button
+                    onClick={handleLogout}
+                    className="tap-target px-3 rounded-md hover:bg-red-50 flex items-center text-sm text-red-600 w-full text-left"
                   >
-                    <img
-                      src={authUser.img || Avatar}
-                      alt="user_image"
-                      className="w-[32px] h-[32px] rounded-[50%] object-cover"
-                    />
-                    <span>{authUser?.username}</span>
-                    <div
-                      ref={modalRef}
-                      className={`absolute top-12 right-0 p-3 z-10 bg-white border rounded-md text-black flex-col items-start gap-3 w-[200px] font-medium transition-transform duration-300 ${
-                        openDrop ? "flex" : "hidden"
-                      }`}
-                    >
-                      {authUser?.isSeller && (
-                        <>
-                          <NavLink
-                            to="/myGigs"
-                            className="cursor-pointer w-full text-sm text-darkColor"
-                          >
-                            Gigs
-                          </NavLink>
-                          <NavLink
-                            to="/add"
-                            className="cursor-pointer w-full text-sm text-darkColor"
-                          >
-                            Add New Gigs
-                          </NavLink>
-                        </>
-                      )}
-                      <NavLink
-                        to="/orders"
-                        className="cursor-pointer w-full text-sm text-darkColor"
-                      >
-                        Orders
-                      </NavLink>
-                      <NavLink
-                        to="/messages"
-                        className="cursor-pointer w-full text-sm text-darkColor"
-                      >
-                        Messages
-                      </NavLink>
-                      <div
-                        onClick={handleLogout}
-                        className="cursor-pointer w-full text-sm text-darkColor"
-                      >
-                        Logout
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </>
+                    Logout
+                  </button>
+                </div>
+              </div>
             ) : (
               <>
-                <div
+                <button
                   onClick={() => {
                     navigate("/");
                     setLoginModal(true);
                   }}
-                  className="cursor-pointer hidden sm:flex"
+                  className="hidden sm:flex text-sm font-semibold text-textMuted hover:text-textPrimary"
                 >
                   Sign in
-                </div>
+                </button>
                 <NavLink
                   to="/join"
-                  className={`border py-2 px-5 rounded hover:bg-primary hover:border-primary hover:text-white transition-all duration-300 text-sm font-semibold ${
-                    active ? "text-primary border-primary" : ""
-                  }`}
+                  className="rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-accentHover transition-colors"
                 >
-                  Join
+                  Start Hiring
                 </NavLink>
               </>
             )}
-          </nav>
-        </div>
-      </div>
-      <div
-        className={`w-full transition-all duration-300 border-b ${
-          active || pathname !== "/" ? "flex" : "hidden"
-        }`}
-      >
-        <hr className="border-black" />
-        <div className="contain relative">
-          <div
-            id={"navSlider"}
-            className={`w-full inline-block h-full whitespace-nowrap scroll-smooth lg:flex items-center lg:justify-between py-3 overflow-x-auto gap-5 font-medium scrollbar-hide text-sm relative ${
-              active || pathname !== "/" ? "!text-gray-500" : "text-gray-200"
-            }`}
-          >
-            {links.map((item, i) => (
-              <span
-                key={i}
-                className="hover:border-b-2 cursor-pointer transition-[border] h-8 scrollbar-hide border-primary mx-4 first:ml-0 lg:mx-0"
-              >
-                {item}
-              </span>
-            ))}
           </div>
-          <span
-            onClick={slideRight}
-            className="absolute z-10 top-3 -right-8 cursor-pointer laptop:hidden"
-          >
-            <FiChevronRight size={20} />
-          </span>
         </div>
       </div>
+
+      <MobileSidebar
+        show={showLink}
+        setShow={setShowLink}
+        setLoginModal={setLoginModal}
+        authUser={authUser}
+        handleLogout={handleLogout}
+      />
       <Login show={loginModal} setShow={setLoginModal} />
     </header>
   );

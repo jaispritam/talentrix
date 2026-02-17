@@ -1,4 +1,3 @@
-import image from "../assets/images/image.png";
 import image2 from "../assets/images/slide2.png";
 import image3 from "../assets/images/slide3.png";
 import image4 from "../assets/images/slide4.png";
@@ -25,7 +24,7 @@ export const cards = [
     id: "001",
     title: "AI Artists",
     description: "Add talent to AI",
-    img: image,
+    img: image11,
   },
   {
     id: "002",

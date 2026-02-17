@@ -1,16 +1,11 @@
-import React, { useEffect, useMemo, useRef } from "react";
-import { BsCurrencyDollar } from "react-icons/bs";
-import { TfiWorld } from "react-icons/tfi";
-import { NavLink, useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
+import React, { useEffect, useRef } from "react";
+import { FiX } from "react-icons/fi";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 
-const MobileSidebar = ({ show, setShow, setLoginModal }) => {
-  const variants = {
-    open: { opacity: 1, x: 0, transition: { duration: 0.3 } },
-    closed: { opacity: 0, x: "-100%", transition: { duration: 0.3 } },
-  };
+const MobileSidebar = ({ show, setShow, setLoginModal, authUser, handleLogout }) => {
   const showRef = useRef(null);
   const navigate = useNavigate();
+  const { pathname } = useLocation();
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -19,86 +14,70 @@ const MobileSidebar = ({ show, setShow, setLoginModal }) => {
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [setShow]);
+
+  useEffect(() => {
+    document.body.style.overflow = show ? "hidden" : "auto";
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.body.style.overflow = "auto";
     };
-  }, []);
+  }, [show]);
 
-  const body = document.querySelector("html");
-
-  const overflowHidden = () => {
-    if (show) {
-      return (body.style.overflow = "hidden");
-    } else {
-      return {
-        body: {
-          one: (body.style.overflowY = "auto"),
-          two: (body.style.overflowX = "hidden"),
-        },
-      };
-    }
-  };
-  useMemo(() => overflowHidden(), [show]);
+  useEffect(() => {
+    setShow(false);
+  }, [pathname, setShow]);
 
   return (
-    <div
-      className={`w-full h-full bg-black/40 fixed top-0 z-40 left-0 transition-all duration-500 ${
-        show ? "flex" : "hidden"
-      }`}
-    >
-      <motion.div
-        animate={show ? "open" : "closed"}
-        variants={variants}
+    <div className={`fixed inset-0 z-50 bg-slate-900/20 ${show ? "block" : "hidden"}`}>
+      <aside
         ref={showRef}
-        className={`flex flex-col gap-4 justify-start items-start w-[250px] bg-white absolute top-0 z-20 h-screen p-6 ${
-          show ? "left-0" : "-left-[100vw]"
+        className={`h-full w-[84%] max-w-[320px] bg-white shadow-soft p-5 transition-transform duration-300 ${
+          show ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <div className="sticky top-0 z-2 bg-white w-full flex flex-col gap-6 items-start justify-start">
-          <NavLink
-            to="/join"
-            className={`border py-3 px-6 rounded bg-primary border-primary text-white transition-all duration-300 text-base font-semibold`}
-          >
-            Join Fiverr
-          </NavLink>
-          <div
-            onClick={() => {
-              navigate("/");
-              setShow(false);
-              setLoginModal(true);
-            }}
-            className="cursor-pointer text-gray-400 text-base font-medium"
-          >
-            Sign in
-          </div>
+        <div className="flex items-center justify-between pb-4 border-b border-borderSubtle">
+          <h2 className="headline-display text-lg font-bold">Menu</h2>
+          <button className="tap-target rounded-lg border border-borderSubtle" onClick={() => setShow(false)}>
+            <FiX size={18} className="mx-auto" />
+          </button>
         </div>
-        <p className="cursor-pointer text-gray-400 text-base font-medium">
-          Browser Categories
-        </p>
-        <p className="cursor-pointer text-gray-400 text-base font-medium">
-          Explore
-        </p>
-        <NavLink to="/" className={`text-base font-semibold text-gray-400`}>
-          Fiverr Business
-        </NavLink>
-        <div className="mt-5 border-t w-full flex items-start justify-start flex-col gap-4 pt-3">
-          <p className="cursor-pointer text-gray-400 text-base font-medium">
-            Home
-          </p>
-          <p className="cursor-pointer text-gray-400 text-base font-medium flex items-center justify-start gap-2">
-            English
-            <span>
-              <TfiWorld />
-            </span>
-          </p>
-          <p className="cursor-pointer text-gray-400 text-base font-medium flex items-center justify-start gap-2">
-            <span>
-              <BsCurrencyDollar />
-            </span>
-            USD
-          </p>
+
+        <div className="pt-4 flex flex-col gap-2 text-sm font-semibold text-textPrimary">
+          <NavLink to="/" className="tap-target rounded-md px-3 hover:bg-elevated flex items-center">Product</NavLink>
+          <NavLink to="/gigs" className="tap-target rounded-md px-3 hover:bg-elevated flex items-center">Marketplace</NavLink>
+          <NavLink to="/messages" className="tap-target rounded-md px-3 hover:bg-elevated flex items-center">Resources</NavLink>
         </div>
-      </motion.div>
+
+        <div className="mt-6 border-t border-borderSubtle pt-4 flex flex-col gap-3">
+          {authUser ? (
+            <>
+              <NavLink to="/orders" className="tap-target rounded-md px-3 hover:bg-elevated flex items-center">Orders</NavLink>
+              <NavLink to="/messages" className="tap-target rounded-md px-3 hover:bg-elevated flex items-center">Messages</NavLink>
+              <button onClick={handleLogout} className="tap-target rounded-md px-3 text-left text-red-600 hover:bg-red-50">Logout</button>
+            </>
+          ) : (
+            <>
+              <button
+                onClick={() => {
+                  navigate("/");
+                  setShow(false);
+                  setLoginModal(true);
+                }}
+                className="tap-target rounded-lg border border-borderSubtle text-sm font-semibold"
+              >
+                Sign in
+              </button>
+              <NavLink
+                to="/join"
+                className="tap-target rounded-lg bg-primary text-white text-sm font-semibold flex items-center justify-center"
+              >
+                Start Hiring
+              </NavLink>
+            </>
+          )}
+        </div>
+      </aside>
     </div>
   );
 };

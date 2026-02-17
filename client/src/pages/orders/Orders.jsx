@@ -37,22 +37,14 @@ const Orders = () => {
   const tableActions = data?.map((item) => ({
     image: (
       <div className="w-14 h-14">
-        <img
-          src={item.img}
-          alt={item.username}
-          className="w-full h-full object-cover rounded-full"
-        />
+        <img src={item.img} alt={item.username} className="w-full h-full object-cover rounded-full border border-borderSubtle" />
       </div>
     ),
-    title: (
-      <p className="w-full flex items-center justify-start">{item.title}</p>
-    ),
-    price: (
-      <p className="w-full flex items-center justify-start">{item.price}</p>
-    ),
+    title: <p className="w-full flex items-center justify-start text-textPrimary">{item.title}</p>,
+    price: <p className="w-full flex items-center justify-start text-textPrimary">${item.price}</p>,
     actions: (
       <div
-        className="w-8 h-8 cursor-pointer bg-blue-600 rounded-full flex items-center justify-center text-white"
+        className="w-9 h-9 cursor-pointer bg-primary hover:bg-accentHover rounded-full flex items-center justify-center text-white"
         onClick={() => handleContact(item)}
       >
         <MdMail size={18} />
@@ -61,69 +53,50 @@ const Orders = () => {
   }));
 
   return (
-    <main className="py-40">
+    <main className="section-pad-mobile pb-10">
       <div className="contain">
-        <div className="w-full flex flex-col items-start gap-5 justify-start">
-          <div className="flex items-center justify-between w-full gap-2">
-            <h2 className="text-2xl font-bold">Orders</h2>
-          </div>
+        <div className="w-full flex flex-col items-start gap-5">
+          <h2 className="text-2xl font-bold headline-display">Orders</h2>
           {isLoading ? (
-            <div className="flex items-center justify-center w-full">
-              <img src={loader} alt="/" className="w-[40px]" />
+            <div className="flex items-center justify-center w-full py-8">
+              <img src={loader} alt="loading" className="w-[40px]" />
             </div>
           ) : error ? (
-            <p className="text-2xl text-red-400 font-normal">
-              Error : Something went wrong
-            </p>
+            <p className="text-xl text-red-400 font-normal">Error: Something went wrong</p>
+          ) : data?.length === 0 ? (
+            <div className="flex items-center justify-center mt-5 flex-col w-full">
+              <img
+                src="https://cdni.iconscout.com/illustration/premium/thumb/error-404-4344461-3613889.png"
+                alt="empty"
+                className="w-[320px]"
+              />
+              <h2 className="text-3xl text-primary font-medium">No Order Data</h2>
+            </div>
           ) : (
-            <>
-              {data?.length === 0 ? (
-                <div className="flex items-center justify-center mt-5 flex-col w-full">
-                  <img
-                    src="https://cdni.iconscout.com/illustration/premium/thumb/error-404-4344461-3613889.png"
-                    alt="/"
-                    className="w-[350px]"
-                  />
-                  <h2 className="text-4xl text-active font-medium">
-                    No Order Data
-                  </h2>
-                </div>
-              ) : (
-                <table className="w-full">
-                  <thead className="h-[35px]">
-                    <tr>
-                      {ordersColumns &&
-                        ordersColumns.map((head, i) => (
-                          <th
-                            key={i}
-                            className="text-left text-gray-700 text-sm font-semibold leading-[18px] pb-2"
-                          >
-                            {head.header}
-                          </th>
-                        ))}
-                    </tr>
-                  </thead>
-                  <tbody className="w-full">
-                    {tableActions &&
-                      tableActions.map((row, i) => (
-                        <tr
-                          key={i}
-                          className="text-sm leading-5 w-full even:bg-gray-200"
-                        >
-                          {ordersColumns?.map((col, i) => (
-                            <td
-                              key={i}
-                              className="first:text-left text-sm text-darkColor font-medium text-center py-2"
-                            >
-                              {row[col.field]}
-                            </td>
-                          ))}
-                        </tr>
+            <div className="w-full overflow-x-auto surface-card p-4">
+              <table className="w-full min-w-[680px]">
+                <thead className="h-[35px]">
+                  <tr>
+                    {ordersColumns?.map((head, i) => (
+                      <th key={i} className="text-left text-textMuted text-sm font-semibold leading-[18px] pb-2">
+                        {head.header}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody className="w-full">
+                  {tableActions?.map((row, i) => (
+                    <tr key={i} className="text-sm leading-5 w-full border-t border-borderSubtle even:bg-elevated/55">
+                      {ordersColumns?.map((col, j) => (
+                        <td key={j} className="first:text-left text-sm text-textPrimary font-medium text-center py-2">
+                          {row[col.field]}
+                        </td>
                       ))}
-                  </tbody>
-                </table>
-              )}
-            </>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )}
         </div>
       </div>

@@ -1,26 +1,95 @@
-@import url("https://fonts.googleapis.com/css2?family=Noto+Sans:wght@100;200;300;400;500;600;700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-* {
-  font-family: "Noto Sans", sans-serif;
+
+:root {
+  --bg-base: #f8f9fb;
+  --bg-surface: #ffffff;
+  --bg-elevated: #eef2ff;
+  --text-primary: #0f172a;
+  --text-muted: #64748b;
+  --accent: #4f46e5;
+  --accent-hover: #4338ca;
+  --border-subtle: #e2e8f0;
+  --shadow-soft: 0 18px 45px rgba(79, 70, 229, 0.1);
 }
+
+* {
+  font-family: "Inter", sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+  background: var(--bg-base);
+  color: var(--text-primary);
+}
+
+body {
+  margin: 0;
+  overflow-x: hidden;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+h4,
+.headline-display {
+  font-family: "Plus Jakarta Sans", sans-serif;
+}
+
 .contain {
-  width: 90%;
+  width: min(92%, 1240px);
   margin: 0 auto;
 }
 
-.overflow-hiddens {
-  overflow: hidden!;
+.surface-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-soft);
+  border-radius: 16px;
+}
+
+.surface-glass {
+  background: rgba(79, 70, 229, 0.06);
+  border: 1px solid rgba(79, 70, 229, 0.12);
+}
+
+.tap-target {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+.section-pad-mobile {
+  padding-top: 6.5rem;
+  padding-bottom: 3rem;
 }
 
 .active {
-  color: #1dbf73 !important;
+  color: var(--accent) !important;
 }
 
-label .action input:checked ~ i {
-  background-color: #0dcccc;
+.overflow-hiddens {
+  overflow: hidden;
 }
-label .action input:checked ~ i::before {
-  left: calc(100% - 24px);
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

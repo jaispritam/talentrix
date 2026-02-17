@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useMemo, useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useFormik } from "formik";
 import CustomizeInput from "../../utils/Input/CustomizeInput";
@@ -24,7 +24,7 @@ const Login = ({ show, setShow }) => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, []);
+  }, [setShow]);
 
   const initialValues = {
     username: "",
@@ -74,34 +74,35 @@ const Login = ({ show, setShow }) => {
     return touched[key] && errors[key];
   };
 
-  const body = document.querySelector("html");
-  const overflowHidden = () => {
+  useEffect(() => {
+    const html = document.documentElement;
+    const body = document.body;
     if (show) {
-      return (body.style.overflow = "hidden");
+      html.style.overflow = "hidden";
+      body.style.overflow = "hidden";
     } else {
-      return {
-        body: {
-          one: (body.style.overflowY = "auto"),
-          two: (body.style.overflowX = "hidden"),
-        },
-      };
+      html.style.overflow = "";
+      body.style.overflow = "";
     }
-  };
-  useMemo(() => overflowHidden(), [show]);
+    return () => {
+      html.style.overflow = "";
+      body.style.overflow = "";
+    };
+  }, [show]);
 
   return (
     <section
-      className={`fixed top-0 right-0 w-full h-full bg-[#00000085] z-10 place-items-center flex justify-center transition-all duration-500 ${
-        show ? "flex" : "hidden"
+      className={`fixed inset-0 z-[120] bg-black/55 p-4 sm:p-6 flex items-center justify-center transition-opacity duration-300 ${
+        show ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
       }`}
     >
-      <div className="contain flex justify-center items-center">
+      <div className="w-full max-w-[440px]">
         <motion.div
           ref={modalRef}
           initial={{ opacity: 0, y: "-150px" }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ type: "spring", duration: 1 }}
-          className="w-[406px] min-h-[450px] border border-[#F1F2F4] rounded-lg bg-white p-4 md:p-8 overflow-y-auto text-darkColor flex flex-col items-center relative"
+          animate={show ? { opacity: 1, y: 0 } : { opacity: 0, y: -20 }}
+          transition={{ type: "spring", duration: 0.45 }}
+          className="w-full min-h-[450px] max-h-[90vh] border border-[#E2E8F0] rounded-xl bg-white p-4 md:p-8 overflow-y-auto text-darkColor flex flex-col items-center relative shadow-xl"
         >
           <h2 className="w-full text-center text-2xl font-bold">
             Sign In to Fiverr

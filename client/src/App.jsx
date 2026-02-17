@@ -17,7 +17,7 @@ import Pay from "./pages/pay/Pay";
 
 const App = () => {
   return (
-    <div>
+    <div className="bg-base text-textPrimary min-h-screen">
       <Navbar />
       <Routes>
         <Route path="/" element={<Homepage />} />

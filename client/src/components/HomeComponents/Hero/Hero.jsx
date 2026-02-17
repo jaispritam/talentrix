@@ -1,125 +1,83 @@
-import React, { useState, useEffect } from "react";
-import { FiSearch } from "react-icons/fi";
-import { buttons } from "../../../data/data";
-import { useFormik } from "formik";
-import * as yup from "yup";
+import React from "react";
 import { useNavigate } from "react-router-dom";
-import image1 from "../../../assets/images/hero1.png";
-import image2 from "../../../assets/images/hero2.png";
-import image3 from "../../../assets/images/hero3.png";
-import image4 from "../../../assets/images/hero4.png";
-import image5 from "../../../assets/images/hero5.png";
-import image6 from "../../../assets/images/hero6.png";
+import { HiArrowRight } from "react-icons/hi";
 
 const Hero = () => {
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [showOpacityAnimation, setShowOpacityAnimation] = useState(false);
   const navigate = useNavigate();
-  const initialValues = {
-    input: "",
-  };
-  const validationSchema = yup.object({
-    input: yup.string().required("Required"),
-  });
-  const onSubmit = async (payload, actions) => {
-    navigate(`/gigs?search=${payload.input}`);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    actions.resetForm();
-  };
-
-  const { values, handleBlur, handleChange, handleSubmit, touched, errors } =
-    useFormik({
-      initialValues,
-      validationSchema,
-      onSubmit,
-    });
-
-  const changeImage = [image1, image2, image3, image4, image5, image6];
-
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      setCurrentImageIndex((prevIndex) =>
-        prevIndex === changeImage.length - 1 ? 0 : prevIndex + 1
-      );
-    }, 5000);
-
-    return () => clearInterval(intervalId);
-  }, []);
-
-  useEffect(() => {
-    // Show opacity animation for 3 seconds when the image changes
-    setShowOpacityAnimation(true);
-    const opacityAnimationTimeoutId = setTimeout(() => {
-      setShowOpacityAnimation(false);
-    }, 1000);
-
-    return () => clearTimeout(opacityAnimationTimeoutId);
-  }, [currentImageIndex]);
 
   return (
-    <section className="w-full bg-[#1a1b1d] h-screen lg:h-[120vh] text-white  pt-20 relative">
-      <div className="contain flex flex-col items-start justify-center h-full relative z-10">
-        <div className="flex flex-col items-start justify-start gap-5 w-full">
-          <h2 className="text-2xl sm:text-4xl lg:text-5xl font-semibold leading-[120%]">
-            Find the perfect <i className="font-light">freelance</i> <br />{" "}
-            services for your business
-          </h2>
-          <div
-            className={`flex flex-col lg:flex-row items-center w-full gap-5 lg:w-[650px] bg-white h-[50px] rounded-md focus:border focus:border-primary relative mb-20 lg:mb-0`}
-          >
-            <div className="flex items-center justify-start gap-2 w-full h-full">
-              <span
-                className={`text-active pl-3 ${
-                  errors.input && touched.input
-                    ? " placeholder:text-red-500"
-                    : ""
-                }`}
-              >
-                <FiSearch size={18} />
-              </span>
-              <input
-                type="text"
-                value={values.input}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                name="input"
-                placeholder='Try "building mobile app"'
-                className={`w-full h-full bg-transparent outline-none text-active ${
-                  errors.input && touched.input
-                    ? " placeholder:text-red-500"
-                    : ""
-                }`}
-              />
-            </div>
-            <button
-              onClick={handleSubmit}
-              type="submit"
-              className="bg-primary h-full lg:w-[150px] outline-none absolute top-16 lg:relative lg:top-0 rounded-md lg:rounded-[0] lg:rounded-tr-md lg:rounded-br-md w-full"
-            >
-              Search
-            </button>
-          </div>
-          <div className="flex items-center gap-3 flex-wrap sm:flex-row">
-            <span>Popular :</span>
-            {buttons.map((item, i) => (
+    <section className="pt-32 pb-20">
+      <div className="contain">
+        <div className="grid items-center grid-cols-1 lg:grid-cols-2 gap-12">
+          <div className="flex flex-col gap-6">
+            <p className="text-xs uppercase tracking-[0.22em] text-indigo-600 font-semibold">
+              Talent infrastructure for fast teams
+            </p>
+            <h1 className="headline-display text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 leading-[1.05]">
+              Build with the world&apos;s best freelance talent network.
+            </h1>
+            <p className="text-lg text-textMuted max-w-[560px]">
+              Talentrix helps startups and enterprises source vetted specialists, manage delivery, and scale output in days.
+            </p>
+
+            <div className="flex flex-wrap items-center gap-3 pt-2">
               <button
-                key={i}
-                className="border outline-none py-1 px-2 rounded-2xl text-sm"
+                onClick={() => navigate("/gigs")}
+                className="rounded-xl bg-primary px-6 py-3 text-white font-semibold hover:bg-accentHover transition-colors"
               >
-                {item.text}
+                Hire Talent
               </button>
-            ))}
+              <button
+                onClick={() => navigate("/join")}
+                className="rounded-xl border border-borderSubtle bg-white px-6 py-3 text-slate-800 font-semibold hover:bg-slate-50 transition-colors"
+              >
+                Become a Seller
+              </button>
+            </div>
+          </div>
+
+          <div className="relative">
+            <div className="surface-card p-6 rounded-2xl">
+              <div className="h-[340px] rounded-2xl bg-gradient-to-br from-indigo-50 via-violet-50 to-blue-50 border border-indigo-100 relative overflow-hidden">
+                <div className="absolute top-5 left-5 bg-white rounded-xl shadow-box px-4 py-3 w-[190px]">
+                  <p className="text-xs text-textMuted">Hiring Velocity</p>
+                  <h3 className="headline-display text-2xl font-bold text-slate-900">+184%</h3>
+                  <p className="text-xs text-indigo-600 font-semibold">last 30 days</p>
+                </div>
+
+                <div className="absolute top-24 right-6 bg-white rounded-xl shadow-box px-4 py-3 w-[170px]">
+                  <p className="text-xs text-textMuted">Open Projects</p>
+                  <h3 className="headline-display text-2xl font-bold text-slate-900">32</h3>
+                </div>
+
+                <div className="absolute bottom-6 left-6 right-6 bg-white rounded-xl border border-indigo-100 p-4 shadow-box">
+                  <div className="flex items-center justify-between mb-3">
+                    <p className="text-sm font-semibold text-slate-900">Team Performance</p>
+                    <span className="text-indigo-600 text-xs font-semibold flex items-center gap-1">
+                      +23%
+                      <HiArrowRight size={14} />
+                    </span>
+                  </div>
+                  <div className="space-y-2">
+                    <div className="h-2 rounded-full bg-indigo-100">
+                      <div className="h-full w-[78%] rounded-full bg-indigo-600" />
+                    </div>
+                    <div className="h-2 rounded-full bg-violet-100">
+                      <div className="h-full w-[62%] rounded-full bg-violet-500" />
+                    </div>
+                    <div className="h-2 rounded-full bg-blue-100">
+                      <div className="h-full w-[86%] rounded-full bg-blue-500" />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="absolute -right-8 -top-8 w-36 h-36 rounded-full bg-violet-200/70 blur-2xl" />
+                <div className="absolute -left-10 -bottom-10 w-44 h-44 rounded-full bg-indigo-200/70 blur-2xl" />
+              </div>
+            </div>
           </div>
         </div>
       </div>
-      <img
-        src={changeImage[currentImageIndex]}
-        alt="slide"
-        className={`transition-opacity  duration-800 hidden lg:flex absolute top-0 h-full w-full ${
-          showOpacityAnimation ? "opacity-95" : "opacity-100"
-        }`}
-      />
-      ;
     </section>
   );
 };
