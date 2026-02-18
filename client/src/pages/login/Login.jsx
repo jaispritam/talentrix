@@ -9,6 +9,8 @@ import { loginSchema } from "../../schemas";
 import { toast } from "react-toastify";
 import loader from "../../assets/icons/loader.svg";
 import useAuthStore from "../../stores";
+import { createPortal } from "react-dom";
+
 
 const Login = ({ show, setShow }) => {
   const { setAuthUser } = useAuthStore();
@@ -90,23 +92,24 @@ const Login = ({ show, setShow }) => {
     };
   }, [show]);
 
-  return (
+  return createPortal(
     <section
-      className={`fixed inset-0 z-[120] bg-black/55 p-4 sm:p-6 flex items-center justify-center transition-opacity duration-300 ${
+      className={`fixed inset-0 z-[99999] bg-black/55 grid place-items-center overflow-y-auto transition-opacity duration-300 ${
         show ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
       }`}
     >
       <div className="w-full max-w-[440px]">
         <motion.div
           ref={modalRef}
-          initial={{ opacity: 0, y: "-150px" }}
-          animate={show ? { opacity: 1, y: 0 } : { opacity: 0, y: -20 }}
-          transition={{ type: "spring", duration: 0.45 }}
-          className="w-full min-h-[450px] max-h-[90vh] border border-[#E2E8F0] rounded-xl bg-white p-4 md:p-8 overflow-y-auto text-darkColor flex flex-col items-center relative shadow-xl"
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.2 }}
+          className="w-full border border-[#E2E8F0] rounded-xl bg-white p-4 pb-20 md:p-8 md:pb-20 text-darkColor flex flex-col items-center relative shadow-xl"
         >
           <h2 className="w-full text-center text-2xl font-bold">
-            Sign In to Fiverr
+            Sign In to talentrix
           </h2>
+
           <form
             onSubmit={handleSubmit}
             className="flex flex-col gap-2 w-full mt-10"
@@ -154,6 +157,7 @@ const Login = ({ show, setShow }) => {
               )}
             </button>
           </form>
+          
           <div
             onClick={() => setShow(false)}
             className="w-full border-t absolute bottom-0 py-4 bg-white z-10 px-8 flex items-center justify-center text-sm font-semibold text-darkColor gap-2"
@@ -165,7 +169,8 @@ const Login = ({ show, setShow }) => {
           </div>
         </motion.div>
       </div>
-    </section>
+    </section>,
+    document.body
   );
 };
 
