@@ -61,7 +61,10 @@ app.get("/", (req, res) => {
 });
 
 
-app.listen(8000, () => {
+const PORT = process.env.PORT || 8000;
+
+app.listen(PORT, () => {
   connectMongodb();
-  console.log(`Server running on port http://localhost:${8000}`);
+  console.log(`Server running on port ${PORT}`);
 });
+
