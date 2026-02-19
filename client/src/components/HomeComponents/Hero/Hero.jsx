@@ -1,9 +1,36 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { HiArrowRight } from "react-icons/hi";
+import { Axios } from "../../../config";
+import { toast } from "react-toastify";
+import useAuthStore from "../../../stores";
 
 const Hero = () => {
   const navigate = useNavigate();
+  const { authUser, setAuthUser } = useAuthStore();
+
+  const handleBecomeSeller = async () => {
+    if (!authUser) {
+      toast.error("Please login to become a seller.", {
+        position: "bottom-right",
+        autoClose: 1500,
+      });
+      navigate("/join");
+      return;
+    }
+
+    try {
+      const res = await Axios.put("/api/users/become-seller");
+      setAuthUser(res.data);
+      localStorage.setItem("currentUser", JSON.stringify(res.data));
+      navigate("/add-gig");
+    } catch (error) {
+      toast.error(error?.response?.data || "Failed to become a seller.", {
+        position: "bottom-right",
+        autoClose: 1500,
+      });
+    }
+  };
 
   return (
     <section className="pt-32 pb-20">
@@ -28,7 +55,7 @@ const Hero = () => {
                 Hire Talent
               </button>
               <button
-                onClick={() => navigate("/join")}
+                onClick={handleBecomeSeller}
                 className="rounded-xl border border-borderSubtle bg-white px-6 py-3 text-slate-800 font-semibold hover:bg-slate-50 transition-colors"
               >
                 Become a Seller

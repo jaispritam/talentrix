@@ -11,6 +11,7 @@ const Gigs = () => {
   const { search } = useLocation();
   const [open, setOpen] = React.useState(false);
   const [sort, setSort] = React.useState("sales");
+  const [cat, setCat] = React.useState("");
   const minRef = React.useRef();
   const maxRef = React.useRef();
 
@@ -20,16 +21,16 @@ const Gigs = () => {
   };
 
   const { isLoading, error, data, refetch } = useQuery({
-    queryKey: ["gigs", search, sort],
+    queryKey: ["gigs", search, sort, cat],
     queryFn: () =>
       Axios.get(
-        `${requests.gigs}${search}&min=${minRef.current?.value || ""}&max=${maxRef.current?.value || ""}&sort=${sort}`
+        `${requests.gigs}?min=${minRef.current?.value || ""}&max=${maxRef.current?.value || ""}&cat=${cat}&sort=${sort}`
       ).then((res) => res.data),
   });
 
   React.useEffect(() => {
     refetch();
-  }, [sort, refetch]);
+  }, [sort, cat, refetch]);
 
   const apply = () => {
     refetch();
@@ -106,6 +107,21 @@ const Gigs = () => {
                 </div>
               </div>
             </div>
+          </div>
+
+          <div className="w-full flex items-center gap-3">
+            <p className="text-sm font-semibold text-textMuted">Category:</p>
+            <select
+              value={cat}
+              onChange={(e) => setCat(e.target.value)}
+              className="border border-borderSubtle bg-base px-3 h-[40px] rounded-md text-textPrimary outline-none"
+            >
+              <option value="">All</option>
+              <option value="web">Web Development</option>
+              <option value="design">Design</option>
+              <option value="music">Music</option>
+              <option value="animation">Animation</option>
+            </select>
           </div>
 
           <div className={`w-full grid-cols-1 sm:grid-cols-2 tab:grid-cols-3 lg:grid-cols-4 items-start gap-6 ${isLoading || error || data?.length === 0 ? "flex" : "grid"}`}>

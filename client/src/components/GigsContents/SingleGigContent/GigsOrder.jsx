@@ -2,9 +2,33 @@ import React from "react";
 import { AiOutlineClockCircle } from "react-icons/ai";
 import { BsCheckLg } from "react-icons/bs";
 import { TfiReload } from "react-icons/tfi";
-import { Link } from "react-router-dom";
+import { Axios } from "../../../config";
+import requests from "../../../libs/request";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const GigsOrder = ({ data, id }) => {
+  const navigate = useNavigate();
+
+  const handleHire = async () => {
+    try {
+      await Axios.post(`${requests.orders}/${id}`);
+      toast.success("Order created successfully.", {
+        position: "bottom-right",
+        autoClose: 1500,
+      });
+    } catch (error) {
+      const message = error?.response?.data || "Failed to create order.";
+      toast.error(message, {
+        position: "bottom-right",
+        autoClose: 1500,
+      });
+      if (error?.response?.status === 401) {
+        navigate("/join");
+      }
+    }
+  };
+
   return (
     <div className="w-full bg-white border p-4 flex flex-col gap-4 items-start justify-start rounded">
       <div className="flex items-center justify-between gap-2 w-full">
@@ -33,11 +57,12 @@ const GigsOrder = ({ data, id }) => {
           </div>
         ))}
       </div>
-      <Link to={`/pay/${id}`} className="w-full">
-        <button className="w-full h-10 rounded bg-primary/95 text-white hover:bg-primary outline-none">
-          Continue
-        </button>
-      </Link>
+      <button
+        onClick={handleHire}
+        className="w-full h-10 rounded bg-primary/95 text-white hover:bg-primary outline-none"
+      >
+        Hire
+      </button>
     </div>
   );
 };

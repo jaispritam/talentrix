@@ -39,7 +39,17 @@ const Add = () => {
 
   const mutation = useMutation({
     mutationFn: (gig) => {
-      return Axios.post(requests.gigs, gig);
+      return Axios.post(requests.gigs, {
+        title: gig.title,
+        desc: gig.desc,
+        price: gig.price,
+        category: gig.cat,
+        shortTitle: gig.shortTitle,
+        shortDesc: gig.shortDesc,
+        deliveryTime: gig.deliveryTime,
+        revisionNumber: gig.revisionNumber,
+        features: gig.features,
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["myGigs"]);
