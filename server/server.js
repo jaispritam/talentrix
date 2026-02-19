@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 dotenv.config();
-console.log("JWT_SECRET VALUE:", process.env.JWT_KEY);
+//console.log("JWT_SECRET VALUE:", process.env.JWT_KEY);
 
 
 import express from "express";
@@ -44,6 +44,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use("/api/auth", authRoute);
 app.use("/api/user", userRoute);
+app.use("/api/users", userRoute);
 app.use("/api/gigs", gigRoute);
 app.use("/api/orders", orderRoute);
 app.use("/api/conversation", converstionRoute);

@@ -1,76 +1,71 @@
 import mongoose from "mongoose";
 const { Schema } = mongoose;
 
-const GigSchema = new Schema(
-  {
-    userId: {
-      type: String,
-      required: true,
-    },
-    title: {
-      type: String,
-      required: true,
-    },
-    desc: {
-      type: String,
-      required: true,
-    },
-    totalStars: {
-      type: Number,
-      default: 1,
-    },
-    starNumber: {
-      type: Number,
-      default: 1,
-    },
-    cat: {
-      type: String,
-      required: true,
-    },
-    price: {
-      type: Number,
-      required: true,
-    },
-    cover: {
-      type: String,
-      required: true,
-    },
-    images: {
-      type: [String],
-      required: false,
-    },
-    userId: {
-      type: String,
-      required: true,
-    },
-    shortTitle: {
-      type: String,
-      required: true,
-    },
-    shortDesc: {
-      type: String,
-      required: true,
-    },
-    deliveryTime: {
-      type: Number,
-      required: true,
-    },
-    revisionNumber: {
-      type: Number,
-      required: true,
-    },
-    features: {
-      type: [String],
-      required: false,
-    },
-    sales: {
-      type: Number,
-      default: 0,
-    },
+const GigSchema = new Schema({
+  userId: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
   },
-  {
-    timestamps: true,
-  }
-);
+  title: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  description: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  price: {
+    type: Number,
+    required: true,
+    min: 0,
+  },
+  category: {
+    type: String,
+    trim: true,
+  },
+  // Optional legacy/client-compatible fields
+  desc: {
+    type: String,
+    trim: true,
+  },
+  cat: {
+    type: String,
+    trim: true,
+  },
+  shortTitle: {
+    type: String,
+    trim: true,
+  },
+  shortDesc: {
+    type: String,
+    trim: true,
+  },
+  deliveryTime: {
+    type: Number,
+    min: 0,
+  },
+  revisionNumber: {
+    type: Number,
+    min: 0,
+  },
+  cover: {
+    type: String,
+  },
+  images: {
+    type: [String],
+    default: [],
+  },
+  features: {
+    type: [String],
+    default: [],
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+});
 
 export default mongoose.model("Gig", GigSchema);
