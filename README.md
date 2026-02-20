@@ -72,9 +72,6 @@ Talentrix/
 │
 └── README.md
 
-yaml
-Copy code
-
 ---
 
 ## ⚙️ Installation
@@ -102,15 +99,10 @@ cd client
 npm install
 npm run dev
 
-yaml
-Copy code
 
 Frontend runs at:
 
 http://localhost:5173
-
-yaml
-Copy code
 
 ---
 
@@ -123,9 +115,6 @@ MONGO_URL=your_database_connection_string
 JWT_SECRET=your_secret_key
 CLIENT_URL=http://localhost:5173
 
-yaml
-Copy code
-
 ---
 
 ## 🔎 Example API Routes
@@ -136,8 +125,6 @@ GET /api/users
 POST /api/auth/login
 POST /api/auth/register
 
-yaml
-Copy code
 
 ---
 
