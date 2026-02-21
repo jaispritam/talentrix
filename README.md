@@ -6,7 +6,6 @@ Talentrix is a modern full-stack freelance marketplace platform built using Java
    **Live Demo:server** https://talentrix-jeqv.onrender.com/
 
 ---
-
 ## 📌 Overview
 
 Talentrix is designed to simplify hiring for distributed teams.  
